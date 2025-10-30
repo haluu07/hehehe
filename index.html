@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cây Thông Giáng Sinh, Ông Già Noel và Tuần Lộc</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #2a3d46;
+            font-family: 'Arial', sans-serif;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            position: relative;
+        }
+
+        /* Hiệu ứng tuyết rơi */
+        .snow {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 10;
+            opacity: 0.8;
+        }
+
+        .snowflake {
+            position: absolute;
+            background-color: white;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            animation: snowfall 10s linear infinite;
+        }
+
+        @keyframes snowfall {
+            0% { transform: translateY(-10px) translateX(0); }
+            100% { transform: translateY(100vh) translateX(50px); }
+        }
+
+        /* Cây thông */
+        .tree-container {
+            position: relative;
+            bottom: 20px;
+            text-align: center;
+            z-index: 5;
+        }
+
+        /* Cây thông với chiều cao và độ dày lớn hơn */
+        .tree {
+            position: relative;
+            width: 0;
+            height: 0;
+            border-left: 160px solid transparent;
+            border-right: 160px solid transparent;
+            border-bottom: 250px solid green;
+            margin-bottom: 50px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .tree:before {
+            content: '';
+            position: absolute;
+            top: -60px;
+            left: -100px;
+            width: 200px;
+            height: 60px;
+            background-color: brown;
+            border-radius: 15px;
+        }
+
+        /* Trang trí cây thông */
+        .tree-decor {
+            position: absolute;
+            top: 20%;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            justify-content: space-evenly;
+            width: 100%;
+        }
+
+        .tree-decor div {
+            width: 20px;
+            height: 20px;
+            background-color: red;
+            border-radius: 50%;
+            box-shadow: 0 0 10px 5px rgba(255, 0, 0, 0.6);
+        }
+
+        /* Dải đèn trang trí */
+        .tree-lights {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+        }
+
+        .light {
+            width: 12px;
+            height: 12px;
+            background-color: yellow;
+            border-radius: 50%;
+            margin-bottom: 15px;
+            animation: blink 1.5s infinite alternate;
+        }
+
+        /* Hiệu ứng nhấp nháy cho dải đèn */
+        @keyframes blink {
+            0% { opacity: 0.8; }
+            50% { opacity: 1; }
+            100% { opacity: 0.8; }
+        }
+
+        /* Hiệu ứng ngôi sao trên cây */
+        .star {
+            position: absolute;
+            top: -80px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 5rem;
+            color: yellow;
+            animation: twinkle 1.5s infinite alternate;
+        }
+
+        @keyframes twinkle {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        /* Ông già Noel */
+        .santa {
+            position: absolute;
+            bottom: 10px;
+            left: -250px;
+            width: 80px;
+            height: 120px;
+            background-image: url('/mnt/data/25edc090-bedc-48b8-9fa0-0d83ce16149c.png'); /* Thêm hình ông già Noel từ tệp tải lên */
+            background-size: cover;
+            animation: santaMove 6s linear infinite;
+            z-index: 20;
+        }
+
+        /* Tuần lộc */
+        .reindeer {
+            position: absolute;
+            bottom: 10px;
+            left: -300px;
+            width: 90px;
+            height: 90px;
+            background-image: url('/mnt/data/25edc090-bedc-48b8-9fa0-0d83ce16149c.png'); /* Thêm hình tuần lộc */
+            background-size: cover;
+            animation: reindeerMove 6s linear infinite;
+            z-index: 15;
+        }
+
+        @keyframes santaMove {
+            0% { left: -300px; }
+            50% { left: 50px; }
+            100% { left: -300px; }
+        }
+
+        @keyframes reindeerMove {
+            0% { left: -350px; }
+            50% { left: 100px; }
+            100% { left: -350px; }
+        }
+
+        /* Nút chuyển chế độ sáng/tối */
+        .button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s ease;
+            z-index: 30;
+        }
+
+        .button:hover {
+            background-color: #ff4757;
+        }
+
+        /* Chế độ tối */
+        .dark-mode {
+            background-color: #111;
+            color: white;
+        }
+
+        /* Responsive cho điện thoại */
+        @media screen and (max-width: 768px) {
+            .tree {
+                border-left: 100px solid transparent;
+                border-right: 100px solid transparent;
+                border-bottom: 160px solid green;
+            }
+
+            .tree:before {
+                top: -40px;
+                left: -60px;
+                width: 120px;
+                height: 50px;
+            }
+
+            .tree-decor div {
+                width: 15px;
+                height: 15px;
+            }
+
+            .star {
+                font-size: 3rem;
+            }
+
+            .button {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+                top: 10px;
+                right: 10px;
+            }
+
+            .santa {
+                width: 60px;
+                height: 90px;
+                left: -150px;
+            }
+
+            .reindeer {
+                width: 70px;
+                height: 70px;
+                left: -200px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Cây Thông -->
+    <div class="tree-container">
+        <div class="tree"></div>
+        <div class="tree-decor">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+        <div class="tree-lights">
+            <div class="light"></div>
+            <div class="light"></div>
+            <div class="light"></div>
+            <div class="light"></div>
+            <div class="light"></div>
+        </div>
+        <div class="star">★</div>
+    </div>
+
+    <!-- Ông Già Noel -->
+    <div class="santa"></div>
+
+    <!-- Tuần lộc -->
+    <div class="reindeer"></div>
+
+    <!-- Hiệu ứng Tuyết Rơi -->
+    <div class="snow" id="snow"></div>
+
+    <!-- Nút Chuyển Chế Độ Sáng/Tối -->
+    <button class="button" onclick="toggleDarkMode()">Chuyển Chế Độ</button>
+
+    <script>
+        // Hàm tạo tuyết rơi
+        function createSnowflakes() {
+            const snowContainer = document.getElementById('snow');
+            const snowflakeCount = 100;
+
+            for (let i = 0; i < snowflakeCount; i++) {
+                const snowflake = document.createElement('div');
+                snowflake.classList.add('snowflake');
+
+                // Đặt vị trí ngẫu nhiên cho tuyết
+                snowflake.style.left = Math.random() * 100 + 'vw';
+                snowflake.style.animationDuration = Math.random() * 10 + 5 + 's';
+                snowflake.style.animationDelay = Math.random() * 10 + 's';
+
+                snowContainer.appendChild(snowflake);
+            }
+        }
+
+        createSnowflakes();
+
+        // Chuyển đổi chế độ tối/sáng
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+        }
+    </script>
+
+</body>
+</html>
