@@ -27,24 +27,24 @@ jobs:
       # 3. Setup SSH key
       - name: Setup SSH key
         run: |
-          echo "${{ secrets.SSH_KEY }}" > testhehe.pem
-          chmod 600 testhehe.pem  # Đảm bảo quyền file key
+          echo "${{ secrets.SSH_KEY }}" > docker.pem
+          chmod 600 docker.pem  # Đảm bảo quyền file key
 
       # 4. Pre-flight check: SSH vào EC2 để kiểm tra kết nối
       - name: Pre-flight SSH check
         run: |
-          ssh -o StrictHostKeyChecking=no -i testhehe.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} "echo 'SSH OK'; mkdir -p /var/www/html"
+          ssh -o StrictHostKeyChecking=no -i docker.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} "echo 'SSH OK'; mkdir -p /var/www/html"
 
       # 5. Rsync code lên EC2, exclude thư mục .git và .github
       - name: Rsync to EC2 (exclude git & secrets)
         run: |
-          rsync -avz -e "ssh -o StrictHostKeyChecking=no -i testhehe.pem" --delete \
-            --exclude ".git/" --exclude ".github/" --exclude "testhehe.pem" \
+          rsync -avz -e "ssh -o StrictHostKeyChecking=no -i docker.pem" --delete \
+            --exclude ".git/" --exclude ".github/" --exclude "docker.pem" \
             ./ ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:/var/www/html/
 
       # 6. Restart Apache trên EC2
       - name: Restart Apache
         run: |
-          ssh -o StrictHostKeyChecking=no -i testhehe.pem \
+          ssh -o StrictHostKeyChecking=no -i docker.pem \
             ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} \
             "sudo systemctl restart httpd || sudo systemctl restart apache2"
